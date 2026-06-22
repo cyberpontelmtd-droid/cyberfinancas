@@ -42,7 +42,7 @@ export default function BudgetPage() {
       categoryId: item.categoryId,
       description: item.description,
       quantity: item.quantity,
-      unitValue: item.unitValue,
+      unitValue: maskCurrency(String(Math.round(Number(item.unitValue) * 100))),
       notes: item.notes || '',
     })
     setEditing(item.id)
@@ -57,7 +57,7 @@ export default function BudgetPage() {
         categoryId: parseInt(form.categoryId),
         description: form.description,
         quantity: parseFloat(form.quantity),
-        unitValue: parseFloat(form.unitValue),
+        unitValue: parseCurrency(form.unitValue),
         notes: form.notes || null,
       }
       if (editing) {
@@ -193,17 +193,17 @@ export default function BudgetPage() {
               />
               <Input
                 label="Valor unitário (R$) *"
-                type="number"
-                step="0.01"
-                min="0"
+                type="text"
+                inputMode="numeric"
+                placeholder="0,00"
                 value={form.unitValue}
-                onChange={e => setForm(f => ({ ...f, unitValue: e.target.value }))}
+                onChange={e => setForm(f => ({ ...f, unitValue: maskCurrency(e.target.value) }))}
                 required
               />
             </div>
             {form.quantity && form.unitValue && (
               <p className="text-sm text-blue-700 font-medium">
-                Total: R$ {fmt(parseFloat(form.quantity || 0) * parseFloat(form.unitValue || 0))}
+                Total: R$ {fmt(parseFloat(form.quantity || 0) * parseCurrency(form.unitValue || '0'))}
               </p>
             )}
             <div className="flex flex-col gap-1">
@@ -228,4 +228,14 @@ export default function BudgetPage() {
 
 function fmt(v) {
   return Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+}
+
+function maskCurrency(value) {
+  const digits = value.replace(/\D/g, '')
+  const num = parseInt(digits || '0') / 100
+  return num.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+}
+
+function parseCurrency(masked) {
+  return parseFloat(masked.replace(/\./g, '').replace(',', '.')) || 0
 }

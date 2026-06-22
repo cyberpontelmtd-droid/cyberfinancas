@@ -9,6 +9,16 @@ import api from '../services/api'
 
 const emptyForm = { name: '', description: '', startDate: '', endDate: '', totalBudget: '' }
 
+function maskCurrency(value) {
+  const digits = value.replace(/\D/g, '')
+  const num = parseInt(digits || '0') / 100
+  return num.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+}
+
+function parseCurrency(masked) {
+  return parseFloat(masked.replace(/\./g, '').replace(',', '.')) || 0
+}
+
 export default function ProjectsPage() {
   const [projects, setProjects] = useState([])
   const [showModal, setShowModal] = useState(false)
@@ -36,7 +46,7 @@ export default function ProjectsPage() {
       description: p.description || '',
       startDate: p.startDate || '',
       endDate: p.endDate || '',
-      totalBudget: p.totalBudget,
+      totalBudget: maskCurrency(String(Math.round(Number(p.totalBudget) * 100))),
     })
     setEditing(p.id)
     setShowModal(true)
@@ -51,7 +61,7 @@ export default function ProjectsPage() {
         description: form.description || null,
         startDate: form.startDate || null,
         endDate: form.endDate || null,
-        totalBudget: parseFloat(form.totalBudget),
+        totalBudget: parseCurrency(form.totalBudget),
       }
       if (editing) {
         await api.put(`/projects/${editing}`, payload)
@@ -162,11 +172,11 @@ export default function ProjectsPage() {
             </div>
             <Input
               label="Orçamento total (R$) *"
-              type="number"
-              step="0.01"
-              min="0"
+              type="text"
+              inputMode="numeric"
+              placeholder="0,00"
               value={form.totalBudget}
-              onChange={e => setForm(f => ({ ...f, totalBudget: e.target.value }))}
+              onChange={e => setForm(f => ({ ...f, totalBudget: maskCurrency(e.target.value) }))}
               required
             />
             <div className="flex gap-3 justify-end mt-2">
