@@ -21,8 +21,7 @@ export default function Layout({ children }) {
       <header className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <ChartBarIcon className="w-7 h-7 text-blue-600" />
-            <span className="text-xl font-bold text-gray-900">FinPesquisa</span>
+            <img src="/logo.png" alt="CyberFinanças" className="h-8 object-contain" />
           </Link>
           <nav className="flex items-center gap-1">
             <Link
