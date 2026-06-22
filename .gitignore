@@ -1,0 +1,14 @@
+# .NET
+backend/bin/
+backend/obj/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# VS
+.vs/
+
+# Arquivos locais
+*.user
+conteudo_do_documento.txt
