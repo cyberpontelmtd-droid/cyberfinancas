@@ -1,46 +1,52 @@
-# FinPesquisa — Como configurar e rodar
+# CyberFinanças — Guia de Instalação e Execução
 
-## Pré-requisitos (instalar antes)
+## Pré-requisitos
 
-| Ferramenta | Download |
-|---|---|
-| PostgreSQL 16 | https://www.postgresql.org/download/windows/ |
-| Node.js 20 LTS | já instalado |
-| .NET 9 SDK | já instalado |
+Instale as ferramentas abaixo antes de começar:
+
+| Ferramenta | Versão | Download |
+|---|---|---|
+| **Node.js** | 20 LTS | https://nodejs.org |
+| **.NET SDK** | 9.0 | https://dotnet.microsoft.com/download/dotnet/9.0 |
+| **PostgreSQL** | 16 ou 17 | https://www.postgresql.org/download/windows/ |
+| **Git** | qualquer | https://git-scm.com |
 
 ---
 
-## 1. Configurar o banco de dados
+## 1. Clonar o repositório
 
-Após instalar o PostgreSQL, abra o **pgAdmin** ou o **psql** e rode:
+```bash
+git clone https://github.com/cyberpontelmtd-droid/cyberfinancas.git
+cd cyberfinancas
+```
+
+---
+
+## 2. Configurar o banco de dados
+
+Após instalar o PostgreSQL, abra o **pgAdmin** ou **psql** e execute:
 
 ```sql
 CREATE DATABASE finpesquisa;
 ```
 
-O Entity Framework vai criar todas as tabelas automaticamente quando você rodar as migrations.
-
----
-
-## 2. Configurar a connection string
-
-Edite o arquivo `backend/appsettings.json` e ajuste a senha:
+Edite o arquivo `backend/appsettings.json` e coloque a sua senha do PostgreSQL:
 
 ```json
-"DefaultConnection": "Host=localhost;Port=5432;Database=finpesquisa;Username=postgres;Password=SUA_SENHA_AQUI"
+"DefaultConnection": "Host=localhost;Port=5432;Database=finpesquisa;Username=postgres;Password=SUA_SENHA"
 ```
 
 ---
 
-## 3. Criar as tabelas com EF Core Migrations
-
-Abra um terminal na pasta `backend/` e rode:
+## 3. Rodar as migrations (criar tabelas)
 
 ```bash
-dotnet tool install --global dotnet-ef   # só na primeira vez
-dotnet ef migrations add InitialCreate
+cd backend
+dotnet tool install --global dotnet-ef
 dotnet ef database update
 ```
+
+> As tabelas e categorias padrão serão criadas automaticamente.
 
 ---
 
@@ -51,32 +57,52 @@ cd backend
 dotnet run
 ```
 
-A API estará disponível em: http://localhost:5083
+A API ficará disponível em: **http://localhost:5083**
 
 ---
 
 ## 5. Rodar o frontend
 
-Em outro terminal:
+Abra **outro terminal** e execute:
 
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
 
-O site estará em: http://localhost:5173
+O sistema ficará disponível em: **http://localhost:5173**
+
+---
+
+## Acesso online
+
+O sistema também está hospedado em:
+
+**http://187.77.228.49**
 
 ---
 
 ## Estrutura do projeto
 
 ```
-PIIIIB/
-├── backend/           ASP.NET Core Web API (C#)
-├── frontend/          React + Vite + Tailwind CSS
+cyberfinancas/
+├── backend/           ASP.NET Core Web API (.NET 9 + C#)
+│   ├── Controllers/   Endpoints da API
+│   ├── Models/        Entidades do banco
+│   ├── Data/          DbContext e migrations
+│   └── Services/      JWT
+├── frontend/          React 19 + Vite + Tailwind CSS
+│   └── src/
+│       ├── pages/     Telas da aplicação
+│       ├── components/Componentes reutilizáveis
+│       ├── context/   Autenticação (JWT)
+│       └── services/  Comunicação com a API
 └── database/
     └── schema.sql     Script SQL de referência
 ```
+
+---
 
 ## Endpoints da API
 
@@ -92,3 +118,12 @@ PIIIIB/
 | PUT/DELETE | /api/actual-items/{id} | Editar/excluir gasto |
 | GET | /api/projects/{id}/dashboard | Dados do dashboard |
 | GET | /api/categories | Listar categorias |
+
+---
+
+## Tecnologias utilizadas
+
+- **Frontend:** React 19, React Router v7, Recharts, Tailwind CSS, Axios
+- **Backend:** ASP.NET Core 9, Entity Framework Core, JWT, BCrypt
+- **Banco de dados:** PostgreSQL 17
+- **Servidor:** Debian 13 (KVM) com Nginx
