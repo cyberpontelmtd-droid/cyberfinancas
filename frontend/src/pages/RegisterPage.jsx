@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { ChartBarIcon } from '@heroicons/react/24/outline'
 import Input from '../components/Input'
 import Button from '../components/Button'
 
@@ -34,11 +33,8 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-8">
         <div className="flex flex-col items-center mb-8">
-          <div className="bg-blue-600 p-3 rounded-xl mb-3">
-            <ChartBarIcon className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">Criar conta</h1>
-          <p className="text-gray-500 text-sm mt-1">FinPesquisa</p>
+          <img src="/logo.png" alt="CyberFinanças" className="w-64 object-contain mb-2" />
+          <h1 className="text-xl font-bold text-gray-900">Criar conta</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
